@@ -8,14 +8,26 @@
 
 #import "MTAppDelegate.h"
 
+#import "MTMetroViewController.h"
+
 @implementation MTAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    // Override point for customization after application launch.
+//    self.window.backgroundColor = [UIColor whiteColor];
+//    [self.window makeKeyAndVisible];
+	
+	MTMetroViewController *rootViewController = (MTMetroViewController *)self.window.rootViewController;
+	
+	UIViewController *viewController1 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
+	UIViewController *viewController2 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController2"];
+	UIViewController *viewController3 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController3"];
+//	UIViewController *viewController1 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController"];
+	
+	rootViewController.viewControllers = @[viewController1, viewController2, viewController3];
+	
     return YES;
 }
 

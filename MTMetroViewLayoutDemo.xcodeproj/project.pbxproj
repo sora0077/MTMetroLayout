@@ -21,6 +21,11 @@
 		4AC67C6317365FBD0003700A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC67C4417365FBC0003700A /* Foundation.framework */; };
 		4AC67C6B17365FBD0003700A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4AC67C6917365FBD0003700A /* InfoPlist.strings */; };
 		4AC67C6E17365FBD0003700A /* MTMetroViewLayoutDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C6D17365FBD0003700A /* MTMetroViewLayoutDemoTests.m */; };
+		4AC67C7A173660100003700A /* MTMetroViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C79173660100003700A /* MTMetroViewLayout.m */; };
+		4AC67C7B173660100003700A /* MTMetroViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C79173660100003700A /* MTMetroViewLayout.m */; };
+		4AC67C7E173660360003700A /* MTMetroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C7D173660360003700A /* MTMetroViewController.m */; };
+		4AC67C7F173660360003700A /* MTMetroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C7D173660360003700A /* MTMetroViewController.m */; };
+		4AFA55FD174BABD600FF2F01 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +58,11 @@
 		4AC67C6A17365FBD0003700A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4AC67C6C17365FBD0003700A /* MTMetroViewLayoutDemoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MTMetroViewLayoutDemoTests.h; sourceTree = "<group>"; };
 		4AC67C6D17365FBD0003700A /* MTMetroViewLayoutDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MTMetroViewLayoutDemoTests.m; sourceTree = "<group>"; };
+		4AC67C78173660100003700A /* MTMetroViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMetroViewLayout.h; sourceTree = "<group>"; };
+		4AC67C79173660100003700A /* MTMetroViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMetroViewLayout.m; sourceTree = "<group>"; };
+		4AC67C7C173660360003700A /* MTMetroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMetroViewController.h; sourceTree = "<group>"; };
+		4AC67C7D173660360003700A /* MTMetroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMetroViewController.m; sourceTree = "<group>"; };
+		4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +92,7 @@
 		4AC67C3617365FBC0003700A = {
 			isa = PBXGroup;
 			children = (
+				4AC67C7717365FDA0003700A /* MTMetroViewLayout */,
 				4AC67C4817365FBC0003700A /* MTMetroViewLayoutDemo */,
 				4AC67C6617365FBD0003700A /* MTMetroViewLayoutDemoTests */,
 				4AC67C4117365FBC0003700A /* Frameworks */,
@@ -115,6 +126,7 @@
 				4AC67C5117365FBC0003700A /* MTAppDelegate.h */,
 				4AC67C5217365FBC0003700A /* MTAppDelegate.m */,
 				4AC67C4917365FBC0003700A /* Supporting Files */,
+				4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */,
 			);
 			path = MTMetroViewLayoutDemo;
 			sourceTree = "<group>";
@@ -150,6 +162,17 @@
 				4AC67C6917365FBD0003700A /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4AC67C7717365FDA0003700A /* MTMetroViewLayout */ = {
+			isa = PBXGroup;
+			children = (
+				4AC67C78173660100003700A /* MTMetroViewLayout.h */,
+				4AC67C79173660100003700A /* MTMetroViewLayout.m */,
+				4AC67C7C173660360003700A /* MTMetroViewController.h */,
+				4AC67C7D173660360003700A /* MTMetroViewController.m */,
+			);
+			path = MTMetroViewLayout;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,6 +251,7 @@
 				4AC67C5517365FBC0003700A /* Default.png in Resources */,
 				4AC67C5717365FBC0003700A /* Default@2x.png in Resources */,
 				4AC67C5917365FBC0003700A /* Default-568h@2x.png in Resources */,
+				4AFA55FD174BABD600FF2F01 /* MainStoryboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +288,8 @@
 			files = (
 				4AC67C4F17365FBC0003700A /* main.m in Sources */,
 				4AC67C5317365FBC0003700A /* MTAppDelegate.m in Sources */,
+				4AC67C7A173660100003700A /* MTMetroViewLayout.m in Sources */,
+				4AC67C7E173660360003700A /* MTMetroViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +298,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AC67C6E17365FBD0003700A /* MTMetroViewLayoutDemoTests.m in Sources */,
+				4AC67C7B173660100003700A /* MTMetroViewLayout.m in Sources */,
+				4AC67C7F173660360003700A /* MTMetroViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +466,7 @@
 				4AC67C7317365FBD0003700A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4AC67C7417365FBD0003700A /* Build configuration list for PBXNativeTarget "MTMetroViewLayoutDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -446,6 +475,7 @@
 				4AC67C7617365FBD0003700A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
