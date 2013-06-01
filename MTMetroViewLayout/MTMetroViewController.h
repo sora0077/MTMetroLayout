@@ -18,6 +18,11 @@
 @property (nonatomic, assign) NSUInteger selectedIndex;
 
 @property (nonatomic, copy) NSArray *viewControllers;
+
+
+- (id)initWithMetroLayout:(MTMetroViewLayout *)metroLayout;
+
+- (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)animated;
 - (void)setViewControllers:(NSArray *)viewControllers animated:(BOOL)animated;
 
 @end

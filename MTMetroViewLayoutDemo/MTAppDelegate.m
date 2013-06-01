@@ -24,9 +24,22 @@
 	UIViewController *viewController1 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
 	UIViewController *viewController2 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController2"];
 	UIViewController *viewController3 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController3"];
-//	UIViewController *viewController1 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController"];
+	UIViewController *viewController4 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
 	
-	rootViewController.viewControllers = @[viewController1, viewController2, viewController3];
+	[rootViewController setViewControllers:@[viewController1, viewController2, viewController3] animated:NO];
+//	rootViewController.selectedIndex = 2;
+//	double delayInSeconds = 0.01;
+//	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		
+		[rootViewController setSelectedIndex:2 animated:NO];;
+//	});
+	
+//	double delayInSeconds = 2.0;
+//	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//		[rootViewController setViewControllers:@[viewController1, viewController2, viewController3, viewController4] animated:YES];
+//	});
 	
     return YES;
 }
