@@ -11,7 +11,7 @@
 @protocol MTMetroViewDelegateLayout <UICollectionViewDelegate>
 @end
 
-@interface MTMetroViewLayout : UICollectionViewLayout
+@interface MTMetroLayout : UICollectionViewLayout
 @property (nonatomic, assign) CGFloat insetMargin;
 @property (nonatomic, assign) CGFloat minimumInteritemSpacing;
 @property (nonatomic, assign) CGSize headerReferenceSize;
@@ -21,7 +21,7 @@
 #pragma mark - Pivot
 
 @protocol MTMetroLayoutDelegatePivot;
-@interface MTMetroLayoutPivot : MTMetroViewLayout
+@interface MTMetroLayoutPivot : MTMetroLayout
 
 @property (nonatomic, assign) CGFloat headerHeight;
 
@@ -31,7 +31,7 @@
 #pragma mark - Panorama
 
 @protocol MTMetroLayoutDelegatePanorama;
-@interface MTMetroLayoutPanorama : MTMetroViewLayout
+@interface MTMetroLayoutPanorama : MTMetroLayout
 
 @end
 

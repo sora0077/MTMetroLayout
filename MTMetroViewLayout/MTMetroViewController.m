@@ -7,7 +7,7 @@
 //
 
 #import "MTMetroViewController.h"
-#import "MTMetroViewLayout.h"
+#import "MTMetroLayout.h"
 
 @interface MTBatchController : NSObject
 
@@ -355,20 +355,7 @@
 
 - (NSString *)collectionView:(UICollectionView *)collectionView titleForHeaderInSection:(NSInteger)section
 {
-	switch (section) {
-		case 0:
-			return @"test_testaaaaaaaa";
-			
-		case 1:
-			return @"test_t";
-			
-		case 2:
-			return @"test_testaaaaaaaawwwwwwwwwww";
-			
-		default:
-			break;
-	}
-	return @"";
+	return [self.viewControllers[section] title];
 }
 
 @end

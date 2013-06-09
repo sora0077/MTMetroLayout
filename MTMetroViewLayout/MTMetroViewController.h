@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class MTMetroViewLayout;
+@class MTMetroLayout;
 @interface MTMetroViewController : UIViewController
 
-@property (nonatomic, readonly) MTMetroViewLayout *metroLayout;
+@property (nonatomic, readonly) MTMetroLayout *metroLayout;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -20,7 +20,7 @@
 @property (nonatomic, copy) NSArray *viewControllers;
 
 
-- (id)initWithMetroLayout:(MTMetroViewLayout *)metroLayout;
+- (id)initWithMetroLayout:(MTMetroLayout *)metroLayout;
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)animated;
 - (void)setViewControllers:(NSArray *)viewControllers animated:(BOOL)animated;

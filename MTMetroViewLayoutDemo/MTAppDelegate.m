@@ -26,6 +26,11 @@
 	UIViewController *viewController3 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController3"];
 	UIViewController *viewController4 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
 	
+	
+	viewController1.title = @"vviewController3viewController3";
+	viewController2.title = @"viewCont";
+	viewController3.title = @"viewController3";
+	
 	[rootViewController setViewControllers:@[viewController1, viewController2, viewController3] animated:NO];
 //	rootViewController.selectedIndex = 2;
 //	double delayInSeconds = 0.01;

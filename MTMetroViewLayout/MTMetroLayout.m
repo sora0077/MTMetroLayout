@@ -6,9 +6,9 @@
 //  Copyright (c) 2013年 林 達也. All rights reserved.
 //
 
-#import "MTMetroViewLayout.h"
+#import "MTMetroLayout.h"
 
-@interface MTMetroViewLayout () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface MTMetroLayout () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, weak) id dataSource;
 
@@ -23,7 +23,7 @@
 - (CGSize)headerReferenceSizeWithIndex:(NSIndexPath *)indexPath;
 @end
 
-@implementation MTMetroViewLayout
+@implementation MTMetroLayout
 
 - (id)init
 {
@@ -138,7 +138,7 @@
 	CGFloat itemPosition = 0;
 	CGFloat headerPosition = 0;
 	
-	NSLog(@"%@ %@", NSStringFromCGSize(itemSize), NSStringFromCGSize(self.collectionView.frame.size));
+//	NSLog(@"%@ %@", NSStringFromCGSize(itemSize), NSStringFromCGSize(self.collectionView.frame.size));
 	
 	NSMutableArray *itemElements = [NSMutableArray array];
 	NSMutableArray *headerElements = [NSMutableArray array];
@@ -154,7 +154,7 @@
 			
 			attr.frame = frame;
 			
-			headerPosition += frame.size.width + self.minimumInteritemSpacing;
+			headerPosition = frame.origin.x + frame.size.width + self.minimumInteritemSpacing;
 			headerElements[section] = attr;
 		}
 		
@@ -316,8 +316,27 @@
 	self = [super initWithFrame:frame];
 	if (self) {
 		self.backgroundColor = [UIColor whiteColor];
+		
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:frame];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.font = [MTMetroLayoutPivotHeaderView titleFont];
+		[self addSubview:titleLabel];
+		
+		self.titleLabel = titleLabel;
 	}
 	return self;
+}
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	self.titleLabel.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(4, 8, 4, 8));
+}
+
++ (UIFont *)titleFont
+{
+	return [UIFont boldSystemFontOfSize:22];
 }
 
 @end
@@ -328,7 +347,6 @@
 
 @implementation MTMetroLayoutPivot
 {
-	NSMutableArray *_headerAttributes;
 }
 
 - (id)init
@@ -336,7 +354,6 @@
     self = [super init];
     if (self) {
         _headerHeight = 60;
-		_headerAttributes = [NSMutableArray array];
 		self.enableHeaderElements = YES;
 		
 		[self addObserver:self forKeyPath:@"collectionView" options:NSKeyValueObservingOptionNew context:NULL];
@@ -361,13 +378,17 @@
 - (CGPoint)headerReferenceOriginWithIndex:(NSIndexPath *)indexPath baseOrigin:(CGPoint)baseOrigin
 {
 	CGSize itemSize = self.itemSize;
-	itemSize.width *= 1.4;
 	CGSize headerSize = [self headerReferenceSizeWithIndex:indexPath];
 	CGPoint contentOffset = self.collectionView.contentOffset;
-//	contentOffset.x -= itemSize.width * indexPath.section;
-	contentOffset.x = contentOffset.x * headerSize.width / itemSize.width;
-	NSLog(@"%@", NSStringFromCGPoint(CGPointMake(baseOrigin.x + contentOffset.x, baseOrigin.y)));
-	return CGPointMake(baseOrigin.x + contentOffset.x, baseOrigin.y);
+	CGPoint origin = CGPointZero;
+	
+	NSInteger index = contentOffset.x / (itemSize.width + self.minimumInteritemSpacing);
+	origin.x = baseOrigin.x - self.minimumInteritemSpacing * (indexPath.section ? 1 : 0);
+	if (indexPath.section == index) {
+		origin.x = - (headerSize.width / (itemSize.width + self.minimumInteritemSpacing)) * contentOffset.x +  contentOffset.x + index * (headerSize.width ) + (index ? 1 : 0) *  self.minimumInteritemSpacing / 2 * 0;
+	}
+	
+	return origin;
 }
 
 - (CGSize)headerReferenceSizeWithIndex:(NSIndexPath *)indexPath
@@ -381,12 +402,6 @@
 	return YES;
 }
 
-- (void)prepareLayout
-{
-	[super prepareLayout];
-	
-	
-}
 
 #pragma mark UICollectionViewDataSource
 
@@ -403,7 +418,9 @@
         headerView.titleLabel.text = title;
     }
 	
-	NSLog(@"header %@", indexPath);
+	NSArray *colors = @[[UIColor whiteColor], [UIColor orangeColor], [UIColor blueColor]];
+	
+	headerView.backgroundColor = colors[indexPath.section];
     
     return headerView;
 }
@@ -417,15 +434,18 @@
 	}
 	if ([self.delegate respondsToSelector:@selector(collectionView:titleForHeaderInSection:)]) {
 		NSString *title = [self.delegate collectionView:collectionView titleForHeaderInSection:section];
+//		NSLog(@"%@", title);
 		
-		CGSize size = [title sizeWithFont:[UIFont boldSystemFontOfSize:22] constrainedToSize:CGSizeMake(self.itemSize.width * 0.6, self.headerHeight) lineBreakMode:NSLineBreakByWordWrapping];
-		size.width = MAX(self.itemSize.width / 2, size.width);
+		CGSize itemSize = self.itemSize;
+		CGSize size = [title sizeWithFont:[MTMetroLayoutPivotHeaderView titleFont] constrainedToSize:CGSizeMake(self.itemSize.width, self.headerHeight) lineBreakMode:NSLineBreakByWordWrapping];
+		size.width += 20;
+		size.width = MIN(MAX(itemSize.width * 0.4, size.width), itemSize.width * 0.8);
 		size.height = self.headerHeight;
 		return size;
 	} else {
 		
 	}
-	return CGSizeMake(80, self.headerHeight);
+	return CGSizeMake(self.itemSize.width * 0.7, self.headerHeight);
 }
 
 @end
