@@ -25,6 +25,9 @@
 
 @property (nonatomic, assign) CGFloat headerHeight;
 
+- (void)registerClassForHeaderView:(Class)viewClass withReuseIdentifier:(NSString *)identifier;
+- (void)registerNibForHeaderView:(UINib *)nib withReuseIdentifier:(NSString *)identifier;
+
 @end
 
 

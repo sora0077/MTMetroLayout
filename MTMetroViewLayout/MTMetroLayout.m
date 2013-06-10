@@ -19,6 +19,8 @@
 
 @property (nonatomic, assign) BOOL enableHeaderElements;
 
+- (void)setCollectionViewInternal:(UICollectionView *)collectionView;
+
 - (CGPoint)headerReferenceOriginWithIndex:(NSIndexPath *)indexPath baseOrigin:(CGPoint)baseOrigin;
 - (CGSize)headerReferenceSizeWithIndex:(NSIndexPath *)indexPath;
 @end
@@ -29,15 +31,26 @@
 {
 	self = [super init];
 	if (self) {
+		[self addObserver:self forKeyPath:@"collectionView" options:NSKeyValueObservingOptionNew context:NULL];
 		[self initialize];
 	}
 	return self;
 }
 
-//- (CGFloat)minimumLineSpacing
-//{
-//	return 0;
-//}
+- (void)dealloc
+{
+	[self removeObserver:self forKeyPath:@"collectionView"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	UICollectionView *collectionView = [change objectForKey:NSKeyValueChangeNewKey];
+	if (collectionView && [collectionView isKindOfClass:[UICollectionView class]]) {
+		if ([self respondsToSelector:@selector(setCollectionViewInternal:)]) {
+			[self setCollectionViewInternal:collectionView];
+		}
+	}
+}
 
 #pragma mark - 
 
@@ -305,7 +318,7 @@
 
 #pragma mark -
 
-@interface MTMetroLayoutPivotHeaderView : UICollectionReusableView
+@interface MTMetroLayoutPivotHeaderView : UICollectionViewCell
 @property (nonatomic, weak) UILabel *titleLabel;
 @end
 
@@ -315,12 +328,14 @@
 {
 	self = [super initWithFrame:frame];
 	if (self) {
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [UIColor clearColor];
 		
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:frame];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.font = [MTMetroLayoutPivotHeaderView titleFont];
-		[self addSubview:titleLabel];
+		titleLabel.highlightedTextColor = [UIColor lightGrayColor];
+		titleLabel.textColor = [UIColor grayColor];
+		[self.contentView addSubview:titleLabel];
 		
 		self.titleLabel = titleLabel;
 	}
@@ -331,49 +346,64 @@
 {
 	[super layoutSubviews];
 	
-	self.titleLabel.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(4, 8, 4, 8));
+	self.titleLabel.frame = UIEdgeInsetsInsetRect(self.contentView.bounds, UIEdgeInsetsMake(4, 4, 4, 0));
 }
 
 + (UIFont *)titleFont
 {
-	return [UIFont boldSystemFontOfSize:22];
+	return [UIFont fontWithName:@"Avenir-Light" size:38];
 }
 
 @end
 
 @interface MTMetroLayoutPivot () <UICollectionViewDelegateFlowLayout>
-
 @end
 
 @implementation MTMetroLayoutPivot
 {
+	Class _customHeaderClass;
+	UINib *_customHeaderNib;
+	NSString *_customHeaderIdentifier;
 }
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        _headerHeight = 60;
+        _headerHeight = 80;
 		self.enableHeaderElements = YES;
-		
-		[self addObserver:self forKeyPath:@"collectionView" options:NSKeyValueObservingOptionNew context:NULL];
     }
     return self;
 }
 
-- (void)dealloc
+- (void)setCollectionViewInternal:(UICollectionView *)collectionView
 {
-	[self removeObserver:self forKeyPath:@"collectionView"];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-	UICollectionView *collectionView = [change objectForKey:NSKeyValueChangeNewKey];
-	if (collectionView && [collectionView isKindOfClass:[UICollectionView class]]) {
+	collectionView.showsHorizontalScrollIndicator = NO;
+	if ([self.delegate respondsToSelector:@selector(collectionView:viewForHeaderInSection:)]) {
+		if (_customHeaderNib) {
+			[collectionView registerNib:_customHeaderNib forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:_customHeaderIdentifier];
+		} else {
+			[collectionView registerClass:_customHeaderClass forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:_customHeaderIdentifier];
+		}
+		_customHeaderClass = nil;
+		_customHeaderNib = nil;
+		_customHeaderIdentifier = nil;
+	} else {
 		[collectionView registerClass:[MTMetroLayoutPivotHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"MTMetroLayoutPivotHeaderView"];
 	}
 }
 
+- (void)registerClassForHeaderView:(Class)viewClass withReuseIdentifier:(NSString *)identifier
+{
+	_customHeaderClass = viewClass;
+	_customHeaderIdentifier = identifier;
+}
+
+- (void)registerNibForHeaderView:(UINib *)nib withReuseIdentifier:(NSString *)identifier
+{
+	_customHeaderNib = nib;
+	_customHeaderIdentifier = identifier;
+}
 
 - (CGPoint)headerReferenceOriginWithIndex:(NSIndexPath *)indexPath baseOrigin:(CGPoint)baseOrigin
 {
@@ -385,7 +415,7 @@
 	NSInteger index = contentOffset.x / (itemSize.width + self.minimumInteritemSpacing);
 	origin.x = baseOrigin.x - self.minimumInteritemSpacing * (indexPath.section ? 1 : 0);
 	if (indexPath.section == index) {
-		origin.x = - (headerSize.width / (itemSize.width + self.minimumInteritemSpacing)) * contentOffset.x +  contentOffset.x + index * (headerSize.width ) + (index ? 1 : 0) *  self.minimumInteritemSpacing / 2 * 0;
+		origin.x = - (headerSize.width / (itemSize.width + self.minimumInteritemSpacing)) * contentOffset.x +  contentOffset.x + index * headerSize.width;
 	}
 	
 	return origin;
@@ -418,9 +448,8 @@
         headerView.titleLabel.text = title;
     }
 	
-	NSArray *colors = @[[UIColor whiteColor], [UIColor orangeColor], [UIColor blueColor]];
-	
-	headerView.backgroundColor = colors[indexPath.section];
+//	NSArray *colors = @[[UIColor whiteColor], [UIColor blueColor], [UIColor orangeColor], [UIColor redColor]];
+//	headerView.backgroundColor = colors[indexPath.section];
     
     return headerView;
 }
@@ -437,9 +466,9 @@
 //		NSLog(@"%@", title);
 		
 		CGSize itemSize = self.itemSize;
-		CGSize size = [title sizeWithFont:[MTMetroLayoutPivotHeaderView titleFont] constrainedToSize:CGSizeMake(self.itemSize.width, self.headerHeight) lineBreakMode:NSLineBreakByWordWrapping];
+		CGSize size = [title sizeWithFont:[MTMetroLayoutPivotHeaderView titleFont] constrainedToSize:CGSizeMake(self.itemSize.width * 2, self.headerHeight) lineBreakMode:NSLineBreakByWordWrapping];
 		size.width += 20;
-		size.width = MIN(MAX(itemSize.width * 0.4, size.width), itemSize.width * 0.8);
+		size.width = MIN(MAX(itemSize.width * 0.4, size.width), itemSize.width * 0.9);
 		size.height = self.headerHeight;
 		return size;
 	} else {

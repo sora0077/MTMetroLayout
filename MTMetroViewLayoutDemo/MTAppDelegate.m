@@ -24,14 +24,16 @@
 	UIViewController *viewController1 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
 	UIViewController *viewController2 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController2"];
 	UIViewController *viewController3 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController3"];
-	UIViewController *viewController4 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
+//	UIViewController *viewController4 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
 	
+	UIViewController *viewController4 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
 	
 	viewController1.title = @"vviewController3viewController3";
 	viewController2.title = @"viewCont";
 	viewController3.title = @"viewController3";
+	viewController4.title = @"TableView";
 	
-	[rootViewController setViewControllers:@[viewController1, viewController2, viewController3] animated:NO];
+	[rootViewController setViewControllers:@[viewController1, viewController2, viewController3, viewController4] animated:NO];
 //	rootViewController.selectedIndex = 2;
 //	double delayInSeconds = 0.01;
 //	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
