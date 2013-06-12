@@ -320,9 +320,13 @@
 
 @interface MTMetroLayoutPivotHeaderView : UICollectionViewCell
 @property (nonatomic, weak) UILabel *titleLabel;
+@property (nonatomic, assign) NSInteger index;
 @end
 
 @implementation MTMetroLayoutPivotHeaderView
+{
+	__weak UICollectionView *_attachmentView;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -349,6 +353,38 @@
 	self.titleLabel.frame = UIEdgeInsetsInsetRect(self.contentView.bounds, UIEdgeInsetsMake(4, 4, 4, 0));
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+	if ([newSuperview respondsToSelector:@selector(contentOffset)]) {
+		if (_attachmentView) {
+			[_attachmentView removeObserver:self forKeyPath:@"contentOffset"];
+		}
+		[newSuperview addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
+		
+		_attachmentView = (UICollectionView *)newSuperview;
+	}
+	
+	[super willMoveToSuperview:newSuperview];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	CGPoint contentOffset = [[change objectForKey:NSKeyValueChangeNewKey] CGPointValue];
+	
+	MTMetroLayout *collectionViewLayout = (MTMetroLayout *)_attachmentView.collectionViewLayout;
+	CGSize itemSize = collectionViewLayout.itemSize;
+	
+	CGFloat roi = _index * itemSize.width;
+	
+	contentOffset.x = fabsf(contentOffset.x - roi);
+//	contentOffset.x = contentOffset.x * contentOffset.x;
+	contentOffset.x /= itemSize.width;
+	
+	CGFloat dist = MAX(0, MIN(contentOffset.x, 0.4));
+	
+	self.titleLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1 - dist];
+}
+
 + (UIFont *)titleFont
 {
 	return [UIFont fontWithName:@"Avenir-Light" size:38];
@@ -370,7 +406,7 @@
 {
     self = [super init];
     if (self) {
-        _headerHeight = 80;
+        _headerHeight = 42;
 		self.enableHeaderElements = YES;
     }
     return self;
@@ -432,6 +468,12 @@
 	return YES;
 }
 
+//- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+//{
+//	NSArray *attributes = [super layoutAttributesForElementsInRect:rect];
+//	NSLog(@"%@", attributes);
+//	return attributes;
+//}
 
 #pragma mark UICollectionViewDataSource
 
@@ -447,6 +489,8 @@
         NSString *title = [self.delegate collectionView:collectionView titleForHeaderInSection:indexPath.section];
         headerView.titleLabel.text = title;
     }
+	
+	headerView.index = indexPath.section;
 	
 //	NSArray *colors = @[[UIColor whiteColor], [UIColor blueColor], [UIColor orangeColor], [UIColor redColor]];
 //	headerView.backgroundColor = colors[indexPath.section];
@@ -468,7 +512,7 @@
 		CGSize itemSize = self.itemSize;
 		CGSize size = [title sizeWithFont:[MTMetroLayoutPivotHeaderView titleFont] constrainedToSize:CGSizeMake(self.itemSize.width * 2, self.headerHeight) lineBreakMode:NSLineBreakByWordWrapping];
 		size.width += 20;
-		size.width = MIN(MAX(itemSize.width * 0.4, size.width), itemSize.width * 0.9);
+		size.width = MIN(MAX(itemSize.width * 0.3, size.width), itemSize.width * 0.9);
 		size.height = self.headerHeight;
 		return size;
 	} else {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A48EDEC1766249600688206 /* MTMetroNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A48EDEB1766249500688206 /* MTMetroNavigationController.m */; };
 		4AC67C4317365FBC0003700A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC67C4217365FBC0003700A /* UIKit.framework */; };
 		4AC67C4517365FBC0003700A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC67C4417365FBC0003700A /* Foundation.framework */; };
 		4AC67C4717365FBC0003700A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC67C4617365FBC0003700A /* CoreGraphics.framework */; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4A48EDEA1766249500688206 /* MTMetroNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMetroNavigationController.h; sourceTree = "<group>"; };
+		4A48EDEB1766249500688206 /* MTMetroNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMetroNavigationController.m; sourceTree = "<group>"; };
 		4AC67C3F17365FBC0003700A /* MTMetroViewLayoutDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTMetroViewLayoutDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AC67C4217365FBC0003700A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4AC67C4417365FBC0003700A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -171,6 +174,8 @@
 				4AC67C79173660100003700A /* MTMetroLayout.m */,
 				4AC67C7C173660360003700A /* MTMetroViewController.h */,
 				4AC67C7D173660360003700A /* MTMetroViewController.m */,
+				4A48EDEA1766249500688206 /* MTMetroNavigationController.h */,
+				4A48EDEB1766249500688206 /* MTMetroNavigationController.m */,
 			);
 			path = MTMetroViewLayout;
 			sourceTree = "<group>";
@@ -290,6 +295,7 @@
 				4AC67C5317365FBC0003700A /* MTAppDelegate.m in Sources */,
 				4AC67C7A173660100003700A /* MTMetroLayout.m in Sources */,
 				4AC67C7E173660360003700A /* MTMetroViewController.m in Sources */,
+				4A48EDEC1766249600688206 /* MTMetroNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

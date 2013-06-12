@@ -18,8 +18,11 @@
 //    // Override point for customization after application launch.
 //    self.window.backgroundColor = [UIColor whiteColor];
 //    [self.window makeKeyAndVisible];
+	UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
+	MTMetroViewController *rootViewController = (MTMetroViewController *)navController.topViewController;
 	
-	MTMetroViewController *rootViewController = (MTMetroViewController *)self.window.rootViewController;
+	
+	rootViewController.title = @"People";
 	
 	UIViewController *viewController1 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController1"];
 	UIViewController *viewController2 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"UIViewController2"];
@@ -28,10 +31,10 @@
 	
 	UIViewController *viewController4 = [rootViewController.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
 	
-	viewController1.title = @"vviewController3viewController3";
-	viewController2.title = @"viewCont";
-	viewController3.title = @"viewController3";
-	viewController4.title = @"TableView";
+	viewController1.title = @"all";
+	viewController2.title = @"friends";
+	viewController3.title = @"other";
+	viewController4.title = @"list";
 	
 	[rootViewController setViewControllers:@[viewController1, viewController2, viewController3, viewController4] animated:NO];
 //	rootViewController.selectedIndex = 2;
