@@ -65,6 +65,7 @@
 		4AC67C79173660100003700A /* MTMetroLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMetroLayout.m; sourceTree = "<group>"; };
 		4AC67C7C173660360003700A /* MTMetroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMetroViewController.h; sourceTree = "<group>"; };
 		4AC67C7D173660360003700A /* MTMetroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMetroViewController.m; sourceTree = "<group>"; };
+		4ADCD4631768D7C00011C121 /* MTMetroLayout.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MTMetroLayout.podspec; sourceTree = "<group>"; };
 		4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +96,7 @@
 		4AC67C3617365FBC0003700A = {
 			isa = PBXGroup;
 			children = (
+				4ADCD4631768D7C00011C121 /* MTMetroLayout.podspec */,
 				4AC67C7717365FDA0003700A /* MTMetroViewLayout */,
 				4AC67C4817365FBC0003700A /* MTMetroViewLayoutDemo */,
 				4AC67C6617365FBD0003700A /* MTMetroViewLayoutDemoTests */,
