@@ -6,7 +6,7 @@
 #
 Pod::Spec.new do |s|
   s.name         = "MTMetroLayout"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "A short description of MTMetroLayout."
   # s.description  = <<-DESC
   #                   An optional longer description of MTMetroLayout
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   # Specify the license type. CocoaPods detects automatically the license file if it is named
   # 'LICENCE*.*' or 'LICENSE*.*', however if the name is different, specify it.
-  s.license      = 'MIT (example)'
+  s.license      = 'MIT'
   # s.license      = { :type => 'MIT (example)', :file => 'FILE_LICENSE' }
 
   # Specify the authors of the library, with email addresses. You can often find
@@ -34,20 +34,20 @@ Pod::Spec.new do |s|
 
   # Specify the location from where the source should be retrieved.
   #
-  s.source       = { :git => "https://github.com/sora0077/MTMetroLayout.git", :tag => "0.0.1" }
+  s.source       = { :git => "https://github.com/sora0077/MTMetroLayout.git", :tag => "0.0.2" }
 
 
   # If this Pod runs only on iOS or OS X, then specify the platform and
   # the deployment target.
   #
-  s.platform     = :ios, '5.0'
+  # s.platform     = :ios, '5.0'
 
   # ――― MULTI-PLATFORM VALUES ――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   # If this Pod runs on both platforms, then specify the deployment
   # targets.
   #
-  # s.ios.deployment_target = '5.0'
+  s.ios.deployment_target = '5.0'
   # s.osx.deployment_target = '10.7'
 
   # A list of file patterns which select the source files that should be
