@@ -403,21 +403,21 @@
     MTMetroLayout *collectionViewLayout = (MTMetroLayout *)_attachmentView.collectionViewLayout;
 	CGSize itemSize = collectionViewLayout.itemSize;
 	
-	CGFloat roi = _index * itemSize.width;
+	CGFloat roi = _index * (itemSize.width + collectionViewLayout.minimumInteritemSpacing);
 	
 	contentOffset.x = fabsf(contentOffset.x - roi);
 	contentOffset.x /= itemSize.width;
 	
-	CGFloat dist = MAX(0, MIN(contentOffset.x, 0.6));
-    
-    NSLog(@"%s %d %f %@", __func__, _index, dist, _titleLabel.text);
+	CGFloat dist = MAX(0, MIN(contentOffset.x, 0.7));
     
     UIColor *tintColor = [UIColor whiteColor];
     if (collectionViewLayout.tintColor) {
         tintColor = collectionViewLayout.tintColor;
     }
 	
-	self.titleLabel.textColor = [tintColor colorWithAlphaComponent:1 - dist];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.titleLabel.textColor = [tintColor colorWithAlphaComponent:1 - dist];
+    });
 }
 
 - (void)backgroundButtonTapAction:(id)sender
@@ -536,6 +536,7 @@
     }
 	
 	
+    [headerView updateContentOffset:collectionView.contentOffset];
 //	NSArray *colors = @[[UIColor whiteColor], [UIColor blueColor], [UIColor orangeColor], [UIColor redColor]];
 //	headerView.backgroundColor = colors[indexPath.section];
     

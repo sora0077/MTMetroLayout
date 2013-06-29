@@ -211,10 +211,6 @@
 	[super viewWillLayoutSubviews];
 	
 	self.collectionView.frame = self.view.bounds;
-    
-//    [self.collectionView.collectionViewLayout invalidateLayout];
-//    
-//    NSLog(@"%s %@ %@", __func__, NSStringFromCGRect(self.view.bounds), self.collectionView.visibleCells);
 }
 
 - (void)didReceiveMemoryWarning
@@ -420,7 +416,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectHeaderInSection:(NSUInteger)section
 {
-    [self moveViewControllerAtIndex:section animated:YES];
+    [self setSelectedIndex:section animated:YES];
 }
 
 @end
