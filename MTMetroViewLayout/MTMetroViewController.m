@@ -74,6 +74,7 @@
 
 
 - (void)updateViewController:(UIViewController *)viewController parentViewController:(UIViewController *)parentViewController;
+- (void)updateViewController:(UIViewController *)viewController size:(CGSize)size parentViewController:(UIViewController *)parentViewController;
 
 @end
 
@@ -89,9 +90,23 @@
 
 - (void)updateViewController:(UIViewController *)viewController parentViewController:(UIViewController *)parentViewController
 {
+    [self updateViewController:viewController size:CGSizeZero parentViewController:parentViewController];
+}
+
+- (void)updateViewController:(UIViewController *)viewController size:(CGSize)size parentViewController:(UIViewController *)parentViewController
+{
 	[self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[viewController.view removeFromSuperview];
-	viewController.view.frame = self.contentView.bounds;
+    
+    if (CGSizeEqualToSize(size, CGSizeZero)) {
+        viewController.view.frame = self.contentView.bounds;
+    } else {
+        CGRect frame = viewController.view.frame;
+        frame.origin = CGPointZero;
+        frame.size = size;
+        viewController.view.frame = frame;
+    }
+    
 	if (_viewController != viewController) {
 		[_viewController willMoveToParentViewController:nil];
 		[_viewController removeFromParentViewController];
@@ -130,6 +145,22 @@
 	}
 	return self;
 }
+
+- (id)initWithLayoutStyle:(MTMetroLayoutStyle)style
+{
+    self = [super init];
+    if (self) {
+        if (style == MTMetroLayoutStylePivot) {
+            _metroLayout = [[MTMetroLayoutPivot alloc] init];
+        } else if (style == MTMetroLayoutStylePanorama) {
+            _metroLayout = [[MTMetroLayoutPanorama alloc] init];
+        }
+        
+        [self initialize];
+    }
+    return self;
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -180,6 +211,10 @@
 	[super viewWillLayoutSubviews];
 	
 	self.collectionView.frame = self.view.bounds;
+    
+//    [self.collectionView.collectionViewLayout invalidateLayout];
+//    
+//    NSLog(@"%s %@ %@", __func__, NSStringFromCGRect(self.view.bounds), self.collectionView.visibleCells);
 }
 
 - (void)didReceiveMemoryWarning
@@ -190,10 +225,13 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+//    NSLog(@"%s %@", __func__, NSStringFromCGRect(self.collectionView.frame))
+//    NSLog(@"%s %@", __func__, NSStringFromCGRect(self.collectionView.frame));
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
+//    NSLog(@"%s %@", __func__, NSStringFromCGRect(self.collectionView.frame));
 	[self.collectionView reloadData];
 	[_batchController performBatch:^{
 		[self moveViewControllerAtIndex:_currentIndex animated:NO];
@@ -209,7 +247,10 @@
 
 - (void)initialize
 {
-	_metroLayout = [[MTMetroLayoutPivot alloc] init];
+    if (_metroLayout == nil) {
+        _metroLayout = [[MTMetroLayoutPivot alloc] init];
+    }
+    
 	_currentIndex = 0;
 	
 	_batchController = [[MTBatchController alloc] init];
@@ -251,15 +292,34 @@
 
 - (void)moveViewControllerAtIndex:(NSInteger)selectedIndex animated:(BOOL)animated
 {
-	NSLog(@"%d %d", selectedIndex, _selectedIndex);
+//	NSLog(@"%d %d", selectedIndex, _selectedIndex);
 //	if (selectedIndex != _selectedIndex) {
 		//TODO:
 		NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:selectedIndex];
 	UICollectionViewLayoutAttributes *attr = [self.collectionView layoutAttributesForItemAtIndexPath:indexPath];
-	[self.collectionView setContentOffset:attr.frame.origin animated:animated];
+    CGPoint contentOffset = attr.frame.origin;
+    contentOffset.y = 0;
+	[self.collectionView setContentOffset:contentOffset animated:animated];
 //		[self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
 		_selectedIndex = selectedIndex;
 //	}
+}
+
+
+- (void)updateVisibleCellWithContentOffset:(CGPoint)contentOffset
+{
+    
+    contentOffset.y += _metroLayout.headerReferenceSize.height;
+	NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:contentOffset];
+    
+    if (indexPath) {
+        _currentIndex = indexPath.section;
+        
+        for (NSIndexPath *visibleIndexPath in self.collectionView.indexPathsForVisibleItems) {
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:visibleIndexPath];
+            cell.userInteractionEnabled = _currentIndex == visibleIndexPath.section;
+        }
+    }
 }
 
 
@@ -313,18 +373,18 @@
 	}
 }
 
-#pragma mark -
+#pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-	NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:scrollView.contentOffset];
-	_currentIndex = indexPath.section;
+    CGPoint contentOffset = scrollView.contentOffset;
+    [self updateVisibleCellWithContentOffset:contentOffset];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-	NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:scrollView.contentOffset];
-	_currentIndex = indexPath.section;
+    CGPoint contentOffset = scrollView.contentOffset;
+    [self updateVisibleCellWithContentOffset:contentOffset];
 }
 
 #pragma mark -
@@ -346,8 +406,8 @@
 	
 	UIViewController *viewController = self.viewControllers[indexPath.section];
 	
-	[cell updateViewController:viewController parentViewController:self];
-	
+	[cell updateViewController:viewController size:_metroLayout.itemSize parentViewController:self];
+    
 	return cell;
 }
 
@@ -356,6 +416,11 @@
 - (NSString *)collectionView:(UICollectionView *)collectionView titleForHeaderInSection:(NSInteger)section
 {
 	return [self.viewControllers[section] title];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectHeaderInSection:(NSUInteger)section
+{
+    [self moveViewControllerAtIndex:section animated:YES];
 }
 
 @end

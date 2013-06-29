@@ -62,6 +62,11 @@
 	self.minimumInteritemSpacing = 5;
 }
 
+- (void)setCollectionViewInternal:(UICollectionView *)collectionView
+{
+	//NOTE: Do nothing
+}
+
 - (BOOL)respondsToSelector:(SEL)aSelector
 {
 	BOOL ret = [super respondsToSelector:aSelector];
@@ -129,17 +134,19 @@
 {
 	[super prepareLayout];
 	
+//    NSLog(@"%s", __func__);
+    
     //NOTE:
 	if (self.collectionView.delegate != self) {
 		self.delegate = self.collectionView.delegate;
+        self.collectionView.delegate = self;
 	}
-    self.collectionView.delegate = self;
     
     //NOTE:
 	if (self.collectionView.dataSource != self) {
 		self.dataSource = self.collectionView.dataSource;
+        self.collectionView.dataSource = self;
 	}
-    self.collectionView.dataSource = self;
 
     
 	self.collectionView.pagingEnabled = NO;
@@ -166,6 +173,8 @@
 			frame.size = [self headerReferenceSizeWithIndex:indexPath];
 			
 			attr.frame = frame;
+            
+            attr.zIndex = 100;
 			
 			headerPosition = frame.origin.x + frame.size.width + self.minimumInteritemSpacing;
 			headerElements[section] = attr;
@@ -182,6 +191,8 @@
 			frame.size = itemSize;
 			
 			attr.frame = frame;
+            
+//            NSLog(@"%s %@", __func__, NSStringFromCGRect(frame));
 			
 			itemPosition += frame.size.width + self.minimumInteritemSpacing;
 			
@@ -205,6 +216,8 @@
 				[attributes addObject:attr];
 			}
 		}
+        
+        
 		for (int item = 0; item < [self.collectionView numberOfItemsInSection:section]; item++) {
 			NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
 			UICollectionViewLayoutAttributes *attr = [self layoutAttributesForItemAtIndexPath:indexPath];
@@ -229,11 +242,14 @@
 	contentSize.height = self.collectionView.frame.size.height;
 
 	
+//    NSLog(@"%s %@", __func__, NSStringFromCGSize(contentSize));
+    
 	return contentSize;
 }
 
 - (CGSize)itemSize
 {
+//    NSLog(@"%s %@", __func__, NSStringFromCGSize(UIEdgeInsetsInsetRect(self.collectionView.bounds, UIEdgeInsetsMake(self.headerReferenceSize.height, 0, 0, self.insetMargin)).size));
 	return UIEdgeInsetsInsetRect(self.collectionView.bounds, UIEdgeInsetsMake(self.headerReferenceSize.height, 0, 0, self.insetMargin)).size;
 }
 
@@ -301,14 +317,6 @@
 	return 1;
 }
 
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-//{
-//    if ([self.dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)]) {
-//        return [self.dataSource collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
-//    } else {
-//        return nil;
-//    }
-//}
 
 #pragma mark UICollectionViewDelegate
 
@@ -318,9 +326,20 @@
 
 #pragma mark -
 
+
+@class MTMetroLayoutPivotHeaderView;
+@protocol MTMetroLayoutPivotHeaderViewDelegate <NSObject>
+
+- (void)pivotHeaderViewDidSelectHeader:(MTMetroLayoutPivotHeaderView *)view;
+
+@end
+
 @interface MTMetroLayoutPivotHeaderView : UICollectionViewCell
 @property (nonatomic, weak) UILabel *titleLabel;
+@property (nonatomic, weak) UIButton *backgroundButton;
 @property (nonatomic, assign) NSInteger index;
+
+@property (nonatomic, weak) id<MTMetroLayoutPivotHeaderViewDelegate> delegate;
 @end
 
 @implementation MTMetroLayoutPivotHeaderView
@@ -333,14 +352,17 @@
 	self = [super initWithFrame:frame];
 	if (self) {
 		self.backgroundColor = [UIColor clearColor];
+        
+        UIButton *backgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [backgroundButton addTarget:self action:@selector(backgroundButtonTapAction:) forControlEvents:UIControlEventTouchDown];
+		[self.contentView addSubview:backgroundButton];
 		
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:frame];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.font = [MTMetroLayoutPivotHeaderView titleFont];
-		titleLabel.highlightedTextColor = [UIColor lightGrayColor];
-		titleLabel.textColor = [UIColor grayColor];
 		[self.contentView addSubview:titleLabel];
-		
+        
+        self.backgroundButton = backgroundButton;
 		self.titleLabel = titleLabel;
 	}
 	return self;
@@ -351,6 +373,7 @@
 	[super layoutSubviews];
 	
 	self.titleLabel.frame = UIEdgeInsetsInsetRect(self.contentView.bounds, UIEdgeInsetsMake(4, 4, 4, 0));
+    self.backgroundButton.frame = self.bounds;
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -362,6 +385,8 @@
 		[newSuperview addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
 		
 		_attachmentView = (UICollectionView *)newSuperview;
+        
+        [self updateContentOffset:_attachmentView.contentOffset];
 	}
 	
 	[super willMoveToSuperview:newSuperview];
@@ -370,19 +395,36 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	CGPoint contentOffset = [[change objectForKey:NSKeyValueChangeNewKey] CGPointValue];
-	
-	MTMetroLayout *collectionViewLayout = (MTMetroLayout *)_attachmentView.collectionViewLayout;
+	[self updateContentOffset:contentOffset];
+}
+
+- (void)updateContentOffset:(CGPoint)contentOffset
+{
+    MTMetroLayout *collectionViewLayout = (MTMetroLayout *)_attachmentView.collectionViewLayout;
 	CGSize itemSize = collectionViewLayout.itemSize;
 	
 	CGFloat roi = _index * itemSize.width;
 	
 	contentOffset.x = fabsf(contentOffset.x - roi);
-//	contentOffset.x = contentOffset.x * contentOffset.x;
 	contentOffset.x /= itemSize.width;
 	
-	CGFloat dist = MAX(0, MIN(contentOffset.x, 0.4));
+	CGFloat dist = MAX(0, MIN(contentOffset.x, 0.6));
+    
+    NSLog(@"%s %d %f %@", __func__, _index, dist, _titleLabel.text);
+    
+    UIColor *tintColor = [UIColor whiteColor];
+    if (collectionViewLayout.tintColor) {
+        tintColor = collectionViewLayout.tintColor;
+    }
 	
-	self.titleLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1 - dist];
+	self.titleLabel.textColor = [tintColor colorWithAlphaComponent:1 - dist];
+}
+
+- (void)backgroundButtonTapAction:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(pivotHeaderViewDidSelectHeader:)]) {
+        [self.delegate pivotHeaderViewDidSelectHeader:self];
+    }
 }
 
 + (UIFont *)titleFont
@@ -392,7 +434,7 @@
 
 @end
 
-@interface MTMetroLayoutPivot () <UICollectionViewDelegateFlowLayout>
+@interface MTMetroLayoutPivot () <MTMetroLayoutPivotHeaderViewDelegate, UICollectionViewDelegate>
 @end
 
 @implementation MTMetroLayoutPivot
@@ -454,6 +496,7 @@
 		origin.x = - (headerSize.width / (itemSize.width + self.minimumInteritemSpacing)) * contentOffset.x +  contentOffset.x + index * headerSize.width;
 	}
 	
+//    NSLog(@"%s %@", __func__, NSStringFromCGPoint(origin));
 	return origin;
 }
 
@@ -484,13 +527,14 @@
         return headerView;
     }
     MTMetroLayoutPivotHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"MTMetroLayoutPivotHeaderView" forIndexPath:indexPath];
+	headerView.index = indexPath.section;
+    headerView.delegate = self;
     
     if ([self.delegate respondsToSelector:@selector(collectionView:titleForHeaderInSection:)]) {
         NSString *title = [self.delegate collectionView:collectionView titleForHeaderInSection:indexPath.section];
         headerView.titleLabel.text = title;
     }
 	
-	headerView.index = indexPath.section;
 	
 //	NSArray *colors = @[[UIColor whiteColor], [UIColor blueColor], [UIColor orangeColor], [UIColor redColor]];
 //	headerView.backgroundColor = colors[indexPath.section];
@@ -519,6 +563,15 @@
 		
 	}
 	return CGSizeMake(self.itemSize.width * 0.7, self.headerHeight);
+}
+
+#pragma mark - MTMetroLayoutPivotHeaderViewDelegate
+
+- (void)pivotHeaderViewDidSelectHeader:(MTMetroLayoutPivotHeaderView *)view
+{
+    if ([self.delegate respondsToSelector:@selector(collectionView:didSelectHeaderInSection:)]) {
+        [self.delegate collectionView:self.collectionView didSelectHeaderInSection:view.index];
+    }
 }
 
 @end

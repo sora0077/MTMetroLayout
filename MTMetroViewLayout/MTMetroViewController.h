@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, MTMetroLayoutStyle) {
+    MTMetroLayoutStylePivot,
+    MTMetroLayoutStylePanorama,
+};
+
 @class MTMetroLayout;
 @interface MTMetroViewController : UIViewController
 
@@ -20,7 +25,7 @@
 @property (nonatomic, copy) NSArray *viewControllers;
 
 
-- (id)initWithMetroLayout:(MTMetroLayout *)metroLayout;
+- (id)initWithLayoutStyle:(MTMetroLayoutStyle)style;
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)animated;
 - (void)setViewControllers:(NSArray *)viewControllers animated:(BOOL)animated;

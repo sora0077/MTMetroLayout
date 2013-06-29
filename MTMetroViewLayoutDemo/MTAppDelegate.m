@@ -8,6 +8,7 @@
 
 #import "MTAppDelegate.h"
 
+#import "MTMetroLayout.h"
 #import "MTMetroViewController.h"
 
 @implementation MTAppDelegate
@@ -20,6 +21,8 @@
 //    [self.window makeKeyAndVisible];
 	UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
 	MTMetroViewController *rootViewController = (MTMetroViewController *)navController.topViewController;
+    
+    rootViewController.metroLayout.tintColor = [UIColor whiteColor];
 	
 	
 	rootViewController.title = @"People";

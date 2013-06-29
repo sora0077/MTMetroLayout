@@ -27,6 +27,7 @@
 		4AC67C7E173660360003700A /* MTMetroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C7D173660360003700A /* MTMetroViewController.m */; };
 		4AC67C7F173660360003700A /* MTMetroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC67C7D173660360003700A /* MTMetroViewController.m */; };
 		4AFA55FD174BABD600FF2F01 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */; };
+		4AFB67F2177EAF1D0006F626 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB67F1177EAF1D0006F626 /* ViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		4AC67C7D173660360003700A /* MTMetroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMetroViewController.m; sourceTree = "<group>"; };
 		4ADCD4631768D7C00011C121 /* MTMetroLayout.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MTMetroLayout.podspec; sourceTree = "<group>"; };
 		4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
+		4AFB67F0177EAF1D0006F626 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		4AFB67F1177EAF1D0006F626 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,8 @@
 				4AC67C5217365FBC0003700A /* MTAppDelegate.m */,
 				4AC67C4917365FBC0003700A /* Supporting Files */,
 				4AFA55FC174BABD600FF2F01 /* MainStoryboard.storyboard */,
+				4AFB67F0177EAF1D0006F626 /* ViewController.h */,
+				4AFB67F1177EAF1D0006F626 /* ViewController.m */,
 			);
 			path = MTMetroViewLayoutDemo;
 			sourceTree = "<group>";
@@ -298,6 +303,7 @@
 				4AC67C7A173660100003700A /* MTMetroLayout.m in Sources */,
 				4AC67C7E173660360003700A /* MTMetroViewController.m in Sources */,
 				4A48EDEC1766249600688206 /* MTMetroNavigationController.m in Sources */,
+				4AFB67F2177EAF1D0006F626 /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

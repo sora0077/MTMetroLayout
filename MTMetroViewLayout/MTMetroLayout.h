@@ -15,12 +15,16 @@
 @property (nonatomic, assign) CGFloat insetMargin;
 @property (nonatomic, assign) CGFloat minimumInteritemSpacing;
 @property (nonatomic, assign) CGSize headerReferenceSize;
+
+@property (nonatomic, copy) UIColor *tintColor;
+
+@property (nonatomic, readonly) CGSize itemSize;
+
 @end
 
 
 #pragma mark - Pivot
 
-@protocol MTMetroLayoutDelegatePivot;
 @interface MTMetroLayoutPivot : MTMetroLayout
 
 @property (nonatomic, assign) CGFloat headerHeight;
@@ -47,7 +51,10 @@
 
 @optional
 
-//- (CGFloat)heightForHeaderViewInCollectionView:(UICollectionView *)collectionView;
+//- (UIColor *)collectionViewHeaderTextColor:(UICollectionView *)collectionView;
+//- (UIColor *)collectionViewHeaderHighlightedTextColor:(UICollectionView *)collectionView;
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectHeaderInSection:(NSUInteger)section;
 
 - (NSString *)collectionView:(UICollectionView *)collectionView titleForHeaderInSection:(NSInteger)section;
 

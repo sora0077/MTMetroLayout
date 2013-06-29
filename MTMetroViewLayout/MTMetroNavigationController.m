@@ -12,6 +12,7 @@
 
 + (void)initialize
 {
+	[[self appearance] setShadowImage:[[UIImage alloc] init]];
 	[[self appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
 	[[self appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsLandscapePhone];
 	[[self appearance] setTitleVerticalPositionAdjustment:6 forBarMetrics:UIBarMetricsDefault];
