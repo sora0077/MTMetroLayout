@@ -228,6 +228,9 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
 //    NSLog(@"%s %@", __func__, NSStringFromCGRect(self.collectionView.frame));
+    
+    NSLog(@"%s %d", __func__, _currentIndex);
+    
 	[self.collectionView reloadData];
 	[_batchController performBatch:^{
 		[self moveViewControllerAtIndex:_currentIndex animated:NO];

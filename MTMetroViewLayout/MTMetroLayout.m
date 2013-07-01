@@ -23,6 +23,8 @@
 
 - (CGPoint)headerReferenceOriginWithIndex:(NSIndexPath *)indexPath baseOrigin:(CGPoint)baseOrigin;
 - (CGSize)headerReferenceSizeWithIndex:(NSIndexPath *)indexPath;
+
+- (CGSize)itemSizeWithIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation MTMetroLayout
@@ -249,8 +251,17 @@
 
 - (CGSize)itemSize
 {
-//    NSLog(@"%s %@", __func__, NSStringFromCGSize(UIEdgeInsetsInsetRect(self.collectionView.bounds, UIEdgeInsetsMake(self.headerReferenceSize.height, 0, 0, self.insetMargin)).size));
 	return UIEdgeInsetsInsetRect(self.collectionView.bounds, UIEdgeInsetsMake(self.headerReferenceSize.height, 0, 0, self.insetMargin)).size;
+}
+
+- (CGSize)itemSizeWithIndexPath:(NSIndexPath *)indexPath
+{
+//    if (indexPath.section == 2) {
+//        CGSize itemSize = self.itemSize;
+//        itemSize.width *=2;
+//        return itemSize;
+//    }
+    return self.itemSize;
 }
 
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
@@ -360,6 +371,7 @@
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:frame];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.font = [MTMetroLayoutPivotHeaderView titleFont];
+        titleLabel.textColor = [UIColor clearColor];
 		[self.contentView addSubview:titleLabel];
         
         self.backgroundButton = backgroundButton;
